@@ -1,6 +1,12 @@
 require "bundler/setup"
 require "movie_renter"
 
+# Our development assistants.
+require "awesome_print"
+require "pry"
+require "pry-byebug"
+require "pry-doc"
+
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = ".rspec_status"
