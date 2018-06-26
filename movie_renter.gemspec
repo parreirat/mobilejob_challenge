@@ -9,9 +9,9 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Tiago Parreira"]
   spec.email         = ["parreirat@gmail.com"]
 
-  spec.summary       = %q{TODO: Write a short summary, because RubyGems requires one.}
-  spec.description   = %q{TODO: Write a longer description or delete this line.}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.summary       = "MovieRenter gem for mobileJob challenge."
+  spec.description   = "MovieRenter gem for mobileJob challenge."
+  spec.homepage      = "" # @parreirat TODO -
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
@@ -32,7 +32,21 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_development_dependency "bundler", "~> 1.16"
-  spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "rspec", "~> 3.0"
+  # Bundler, what else?
+  spec.add_development_dependency "bundler"
+
+  # For proper and pretty debugging.
+  spec.add_development_dependency "pry"
+  spec.add_development_dependency "pry-byebug"
+  spec.add_development_dependency "pry-doc"
+  spec.add_development_dependency "awesome_print"
+
+  # Code linting is always nice.
+  spec.add_development_dependency "rubocop"
+
+  # We love tests!
+  spec.add_development_dependency "rspec"
+  spec.add_development_dependency "guard"
+  spec.add_development_dependency "guard-rspec"
+
 end
