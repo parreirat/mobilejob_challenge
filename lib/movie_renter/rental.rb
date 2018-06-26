@@ -1,6 +1,8 @@
 module MovieRenter
   class Rental
-    attr_reader :movie, :days_rented
+
+    attr_reader :movie
+    attr_reader :days_rented
 
     MOVIE_INVALID_MSG = ":movie should be a MovieRenter::Movie object"
     DAYS_RENTED_INVALID_MSG = ":days_rented is not a valid integer"

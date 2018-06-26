@@ -1,14 +1,35 @@
 module MovieRenter
   class Movie
-    CHILDRENS_MOVIE = 2
-    REGULAR = 0
-    NEW_RELEASE = 1
 
-    attr_reader :title_for_movie
-    attr_accessor :price_code
+    PRICE_CODES = { regular: 0, new: 1, children: 2 }
 
-    def initialize(title_for_movie, price_code)
-      @title_for_movie, @price_code = title_for_movie, price_code
+    TITLE_INVALID_MSG =
+      <<~HEREDOC.delete("\n")
+        Price code is invalid, can only be one of the
+         following values: #{PRICE_CODES.values}
+      HEREDOC
+    PRICE_CODE_INVALID_MSG = "Movie title cannot be empty."
+
+    attr_reader :price_code
+    attr_reader :title
+
+    def initialize(title, price_code)
+      raise ArgumentError, TITLE_INVALID_MSG unless price_code_valid?(price_code)
+      raise ArgumentError, PRICE_CODE_INVALID_MSG unless title_valid?(title)
+      @title      = title
+      @price_code = price_code
     end
+
+    private
+
+      def title_valid?(title)
+        title.is_a?(String) && (not title.empty?)
+      end
+
+      def price_code_valid?(price_code)
+        price_code.is_a?(Integer) &&
+        PRICE_CODES.values.include?(price_code)
+      end
+
   end
 end
