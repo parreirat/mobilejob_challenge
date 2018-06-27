@@ -1,46 +1,96 @@
 module MovieRenter
   class Customer
-    attr_reader :customer_name
 
-    def initialize(customer_name)
-      @customer_name = customer_name
+    NAME_INVALID_MSG = ":name has to be non-empty String."
+    RENTAL_INVALID_MSG = ":rental should be a MovieRenter::Rental object."
+
+    attr_reader :name
+    attr_reader :rentals
+
+    def initialize(name)
+      raise ArgumentError, NAME_INVALID_MSG(name) unless name_valid?(title)
+      @name = name
       @rentals ||= []
     end
 
-    def add_rental_object_to_list(arg)
-      x = 7
-      @rentals << arg
+    def add_rental(rental)
+      raise ArgumentError, RENTAL_INVALID_MSG unless rental_valid?(title)
+      @rentals << rental
     end
 
     def statement
-      total_amount, freqent_renter_points = 0, 0
-      result = "Rental Record for #{@customer_name}\n"
-      @rentals.each do |_element|
-        this_amount = 0
 
-        # determine amounts for each line
-    case _element.movie.price_code
-    when Movie::REGULAR
-      this_amount += 2; this_amount += (_element.days_rented - 2) * 1.5 if _element.days_rented > 2
-    when Movie::NEW_RELEASE
-      this_amount += _element.days_rented * 3
-    when Movie::CHILDRENS_MOVIE
-      this_amount += 1.5; this_amount += (_element.days_rented - 3) * 1.5 if _element.days_rented > 3
-    end
+      statement_text = "Rental Record for #{@name}\n"
+      total_cost = 0
+      frequent_renter_points = 0
 
-        # add frequent renter points
-        freqent_renter_points += 1
-        # add bonus for a two day new release rental
-        freqent_renter_points += 1 if _element.movie.price_code == Movie.NEW_RELEASE && _element.days_rented > 1
-
-        # show figures for this rental
-        result += "\t" + _element.movie.title_for_movie + "\t" + this_amount.to_s + "\n"
-      total_amount += this_amount
+      @rentals.each do |rental|
+        # Add frequent renter points
+        frequent_renter_points += 1
+        # Add bonus frequent renter points if any applies
+        frequent_renter_points += bonus_frequent_points(rental)
+        # Sum cost of this specific rental onto total statement cost
+        total_cost += rental_cost(rental)
+        # Append movie title and cost to our statement
+        statement_text += rental_message(rental)
       end
-      # add footer lines
-      result += "Amount owed is #{total_amount.to_s}\n"
-      result += "You earned #{freqent_renter_points.to_s} frequent renter points"
-      result
+
+      # Add footer lines to statement
+      statement_text += statement_footer(total_cost, frequent_renter_points)
+
     end
+
+    private
+
+      def name_valid?(title)
+        title.is_a?(String) && (not title.empty?)
+      end
+
+      def rental_valid?(rental)
+        rental.is_a?(MovieRenter::Rental)
+      end
+
+      def bonus_frequent_points(rental)
+        bonus_points = 0
+        days_rented = rental.days_rented
+        movie_price_code = rental.movie.price_code
+        # Add bonus if it's a new release rental for longer than 1 day
+        if (movie_price_code == MovieRenter::Movie[:NEW]) && days_rented > 1
+          bonus_points += 1
+        end
+        # ...other eligible bonuses conditions
+        bonus_points
+      end
+
+      # Determine cost for this rental according to :price_code of movie
+      def rental_cost(rental)
+        movie = rental.movie
+        cost = 0
+        case movie.price_code
+        when MovieRenter::Movie[:REGULAR]
+          cost += 2
+          cost += (days_rented - 2) * 1.5 if days_rented > 2
+        when MovieRenter::Movie[:NEW]
+          cost += days_rented * 3
+        when MovieRenter::Movie[:CHILDREN]
+          cost += 1.5
+          cost += (days_rented - 3) * 1.5 if days_rented > 3
+        end
+        cost
+      end
+
+      def rental_message(rental)
+        title = rental.movie.title
+        cost = rental_cost(rental)
+        "\t#{title}\t#{cost}\n"
+      end
+
+      def statement_footer(total_cost, frequent_renter_points)
+        footer = ""
+        footer += "Amount owed is #{total_cost}\n"
+        footer += "You earned #{frequent_renter_points} frequent renter points!\n"
+        footer
+      end
+
   end
 end

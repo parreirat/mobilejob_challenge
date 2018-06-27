@@ -1,7 +1,7 @@
 module MovieRenter
   class Movie
 
-    PRICE_CODES = { regular: 0, new: 1, children: 2 }
+    PRICE_CODES = { REGULAR: 0, NEW: 1, CHILDREN: 2 }
 
     TITLE_INVALID_MSG =
       <<~HEREDOC.delete("\n")
