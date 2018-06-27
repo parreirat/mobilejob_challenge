@@ -40,6 +40,49 @@ module MovieRenter
 
     end
 
+    def self.bonus_frequent_points(rental)
+      bonus_points = 0
+      days_rented = rental.days_rented
+      movie = rental.movie
+      movie_price_code = movie.price_code
+      # Add bonus if it's a new release rental for longer than 1 day
+      if movie.is_new? && days_rented > 1
+        bonus_points += 1
+      end
+      # ...other eligible bonuses conditions
+      bonus_points
+    end
+
+    # Determine cost for this rental according to :price_code of movie
+    def self.rental_cost(rental)
+      movie = rental.movie
+      days_rented = rental.days_rented
+      cost = 0
+      if movie.is_regular?
+        cost += 2
+        cost += (days_rented - 2) * 1.5 if days_rented > 2
+      elsif  movie.is_new?
+        cost += days_rented * 3
+      elsif  movie.is_children?
+        cost += 1.5
+        cost += (days_rented - 3) * 1.5 if days_rented > 3
+      end
+      cost
+    end
+
+    def self.rental_message(rental)
+      title = rental.movie.title
+      cost = rental_cost(rental)
+      "\t#{title}\t#{cost}\n"
+    end
+
+    def self.statement_footer(total_cost, frequent_renter_points)
+      footer = ""
+      footer += "Amount owed is #{total_cost}\n"
+      footer += "You earned #{frequent_renter_points} frequent renter points!\n"
+      footer
+    end
+
     private
 
       def name_valid?(title)
@@ -48,47 +91,6 @@ module MovieRenter
 
       def rental_valid?(rental)
         rental.is_a?(MovieRenter::Rental)
-      end
-
-      def bonus_frequent_points(rental)
-        bonus_points = 0
-        days_rented = rental.days_rented
-        movie_price_code = rental.movie.price_code
-        # Add bonus if it's a new release rental for longer than 1 day
-        if (movie_price_code == MovieRenter::Movie[:NEW]) && days_rented > 1
-          bonus_points += 1
-        end
-        # ...other eligible bonuses conditions
-        bonus_points
-      end
-
-      # Determine cost for this rental according to :price_code of movie
-      def rental_cost(rental)
-        movie = rental.movie
-        cost = 0
-        if movie.is_regular?
-          cost += 2
-          cost += (days_rented - 2) * 1.5 if days_rented > 2
-        elsif  movie.is_new?
-          cost += days_rented * 3
-        elsif  movie.is_children?
-          cost += 1.5
-          cost += (days_rented - 3) * 1.5 if days_rented > 3
-        end
-        cost
-      end
-
-      def rental_message(rental)
-        title = rental.movie.title
-        cost = rental_cost(rental)
-        "\t#{title}\t#{cost}\n"
-      end
-
-      def statement_footer(total_cost, frequent_renter_points)
-        footer = ""
-        footer += "Amount owed is #{total_cost}\n"
-        footer += "You earned #{frequent_renter_points} frequent renter points!\n"
-        footer
       end
 
   end
