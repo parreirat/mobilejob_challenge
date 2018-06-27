@@ -28,15 +28,15 @@ module MovieRenter
         # Add frequent renter points
         frequent_renter_points += 1
         # Add bonus frequent renter points if any applies
-        frequent_renter_points += bonus_frequent_points(rental)
+        frequent_renter_points += self.class.bonus_frequent_points(rental)
         # Sum cost of this specific rental onto total statement cost
-        total_cost += rental_cost(rental)
+        total_cost += self.class.rental_cost(rental)
         # Append movie title and cost to our statement
-        statement_text += rental_message(rental)
+        statement_text += self.class.rental_message(rental)
       end
 
       # Add footer lines to statement
-      statement_text += statement_footer(total_cost, frequent_renter_points)
+      statement_text += self.class.statement_footer(total_cost, frequent_renter_points)
 
     end
 
