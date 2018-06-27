@@ -1,3 +1,0 @@
-List of TODO to avoid forgetfulness due to break:
-  - Verify is attributes are set onto classes after they are initialized in
-    tests.

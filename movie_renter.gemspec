@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = "MovieRenter gem for mobileJob challenge."
   spec.description   = "MovieRenter gem for mobileJob challenge."
-  spec.homepage      = "" # @parreirat TODO -
+  spec.homepage      = "https://github.com/parreirat/mobilejob_challenge"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
