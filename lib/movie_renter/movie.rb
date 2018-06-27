@@ -2,6 +2,13 @@ module MovieRenter
   class Movie
 
     PRICE_CODES = { REGULAR: 0, NEW: 1, CHILDREN: 2 }
+    PRICE_CODES.each do |method, value|
+      method = method.to_s.downcase
+      # returns true/false for is_regular?, is_new?, is_children?, etc.
+      self.define_method("is_#{method}?".to_sym) do
+        return self.price_code == PRICE_CODES[method.upcase.to_sym]
+      end
+    end
 
     TITLE_INVALID_MSG =
       <<~HEREDOC.delete("\n")

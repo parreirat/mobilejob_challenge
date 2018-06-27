@@ -3,6 +3,7 @@ RSpec.describe MovieRenter::Movie do
   let(:klass)      { MovieRenter::Movie }
   let(:price_code) { klass::PRICE_CODES.values.sample }
   let(:title)      { "title" }
+  let(:movie)      { klass.new(title, price_code) }
 
   context "initialization of MovieRenter::Movie" do
 
@@ -34,6 +35,19 @@ RSpec.describe MovieRenter::Movie do
 
       it "invalid title - empty String" do
         expect { klass.new("", price_code) }.to raise_error(ArgumentError)
+      end
+
+    end
+
+    context "dynamically defined PRICE_CODE methods" do
+
+      MovieRenter::Movie::PRICE_CODES.each do |type, price_code|
+        method = "is_#{type.to_s.downcase}?".to_sym
+        it { expect(movie).to respond_to(method) }
+        it ":#{method} is true for a #{type} type movie" do
+          movie = klass.new(title, price_code)
+          expect(movie.send(method)).to be_truthy
+        end
       end
 
     end

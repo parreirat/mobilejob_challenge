@@ -66,13 +66,12 @@ module MovieRenter
       def rental_cost(rental)
         movie = rental.movie
         cost = 0
-        case movie.price_code
-        when MovieRenter::Movie[:REGULAR]
+        if movie.is_regular?
           cost += 2
           cost += (days_rented - 2) * 1.5 if days_rented > 2
-        when MovieRenter::Movie[:NEW]
+        elsif  movie.is_new?
           cost += days_rented * 3
-        when MovieRenter::Movie[:CHILDREN]
+        elsif  movie.is_children?
           cost += 1.5
           cost += (days_rented - 3) * 1.5 if days_rented > 3
         end
