@@ -8,13 +8,13 @@ module MovieRenter
     attr_reader :rentals
 
     def initialize(name)
-      raise ArgumentError, NAME_INVALID_MSG(name) unless name_valid?(title)
+      raise ArgumentError, NAME_INVALID_MSG unless name_valid?(name)
       @name = name
       @rentals ||= []
     end
 
     def add_rental(rental)
-      raise ArgumentError, RENTAL_INVALID_MSG unless rental_valid?(title)
+      raise ArgumentError, RENTAL_INVALID_MSG unless rental_valid?(rental)
       @rentals << rental
     end
 
